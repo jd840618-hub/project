@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Platinum - Element Showcase</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+        }
+
+        .intro-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a1a 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .intro-content {
+            text-align: center;
+            max-width: 600px;
+        }
+
+        .intro-title {
+            font-size: 3em;
+            color: #ffffff;
+            margin-bottom: 10px;
+            background: linear-gradient(45deg, #c9c9c9, #ffffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .intro-student {
+            font-size: 1.5em;
+            color: #b0b0b0;
+            margin-bottom: 40px;
+        }
+
+        .intro-element {
+            position: relative;
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 40px;
+            background: rgba(25, 25, 25, 0.8);
+            border: 2px solid #c9c9c9;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .element-symbol {
+            font-size: 4em;
+            font-weight: bold;
+            color: #ffffff;
+        }
+
+        .element-number {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 1.2em;
+            color: #c9c9c9;
+        }
+
+        .start-btn {
+            background: linear-gradient(45deg, #c9c9c9, #ffffff);
+            color: #000;
+            border: none;
+            padding: 15px 30px;
+            font-size: 1.3em;
+            font-weight: bold;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .start-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(201, 201, 201, 0.3);
+        }
+
+        .main-content {
+            transition: opacity 0.5s ease;
+        }
+
+        .hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .navbar {
+            background: rgba(20, 20, 20, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #333;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar .element-name {
+            font-size: 2.2em;
+            font-weight: bold;
+            background: linear-gradient(45deg, #c9c9c9, #ffffff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+        }
+
+        .navbar .student-name {
+            font-size: 1.3em;
+            color: #b0b0b0;
+            font-weight: 300;
+        }
+
+        .container {
+            display: block;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+
+        .left-section {
+            width: 100%;
+            max-width: none;
+        }
+
+        .right-section {
+            width: 100%;
+        }
+
+        .section {
+            background: rgba(25, 25, 25, 0.8);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 1px solid #333;
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.25);
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            color: #ffffff;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #444;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::before {
+            content: "⚛️";
+            font-size: 1.2em;
+        }
+
+        .element-image {
+            width: 80%;
+            max-width: 400px;
+            margin: 0 auto 25px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .element-image img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .image-placeholder {
+            width: 100%;
+            height: auto;
+            background: linear-gradient(135deg, #2a2a2a, #1a1a1a);
+            border: 2px dashed #555;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 25px;
+            color: #666;
+            font-size: 1.1em;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .image-placeholder img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 8px;
+        }
+
+        .image-placeholder:hover {
+            border-color: #777;
+            background: linear-gradient(135deg, #333, #222);
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+
+        .info-item {
+            background: rgba(40, 40, 40, 0.6);
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #c9c9c9;
+            transition: all 0.3s ease;
+        }
+
+        .info-item:hover {
+            background: rgba(50, 50, 50, 0.8);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(201, 201, 201, 0.1);
+        }
+
+        .info-label {
+            font-size: 0.9em;
+            color: #999;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-value {
+            font-size: 1.3em;
+            color: #ffffff;
+            font-weight: bold;
+        }
+
+        .explanation {
+            background: rgba(30, 30, 30, 0.6);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #c9c9c9;
+            margin-top: 15px;
+        }
+
+        .explanation p {
+            font-size: 1.1em;
+            line-height: 1.6;
+            color: #e0e0e0;
+        }
+
+        .placeholder-content {
+            background: rgba(30, 30, 30, 0.6);
+            padding: 30px;
+            border-radius: 10px;
+            border: 2px dashed #555;
+            text-align: center;
+            color: #666;
+        }
+
+        .links-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .link-item {
+            background: rgba(40, 40, 40, 0.6);
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #c9c9c9;
+            transition: all 0.3s ease;
+        }
+
+        .link-item:hover {
+            background: rgba(50, 50, 50, 0.8);
+            transform: translateY(-2px);
+        }
+
+        .link-label {
+            display: block;
+            font-size: 0.9em;
+            color: #999;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .link-item a {
+            color: #c9c9c9;
+            text-decoration: none;
+            font-size: 1.1em;
+            transition: color 0.3s ease;
+        }
+
+        .link-item a:hover {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+
+        .property-group {
+            margin-bottom: 25px;
+        }
+
+        .property-group h3 {
+            color: #ffffff;
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .uses-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .use-item {
+            background: rgba(40, 40, 40, 0.6);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #c9c9c9;
+            line-height: 1.5;
+        }
+
+        .facts-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .fact-item {
+            background: rgba(40, 40, 40, 0.6);
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 3px solid #c9c9c9;
+        }
+
+        .section-divider {
+            border: none;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #444, transparent);
+            margin: 30px 0;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 10px;
+                text-align: center;
+            }
+
+            .container {
+                flex-direction: column;
+                padding: 20px;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .navbar .element-name {
+                font-size: 1.8em;
+            }
+        }
+
+        .section {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="intro-screen" class="intro-screen">
+        <div class="intro-content">
+            <h1 class="intro-title">My Project</h1>
+            <h2 class="intro-student">Garnett Johnston</h2>
+            <div class="intro-element">
+                <div class="element-symbol">Pt</div>
+                <div class="element-number">78</div>
+            </div>
+            <button class="start-btn" onclick="startPresentation()">Start Presentation</button>
+        </div>
+    </div>
+
+    <div id="main-content" class="main-content hidden">
+    <nav class="navbar">
+        <div class="element-name">Platinum</div>
+        <div class="student-name">Garnett Johnston</div>
+    </nav>
+
+    <div class="container">
+        <div class="left-section">
+            <div class="section">
+                <h2 class="section-title">Element Basics</h2>
+                <div class="element-image">
+                    <img src="https://i.postimg.cc/q7ybWSK4/Element.jpg" alt="Platinum Element" />
+                </div>
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Atomic Number</div>
+                        <div class="info-value">78</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Atomic Mass</div>
+                        <div class="info-value">195.08 u</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Symbol</div>
+                        <div class="info-value">Pt</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Neutrons</div>
+                        <div class="info-value">117</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Electrons</div>
+                        <div class="info-value">78</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Protons</div>
+                        <div class="info-value">78</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Group</div>
+                        <div class="info-value">10</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Period</div>
+                        <div class="info-value">6</div>
+                    </div>
+                    <div class="info-item">
+                        <div class="info-label">Category</div>
+                        <div class="info-value">Metal</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Properties and Uses</h2>
+                
+                <div class="property-group">
+                    <h3>Valence Electrons</h3>
+                    <div class="info-item">
+                        <div class="info-label">Number of Valence Electrons</div>
+                        <div class="info-value">10</div>
+                    </div>
+                    <div class="explanation">
+                        <p>Reactivity comes from valence electrons - the closer to a full shell, the less reactive.</p>
+                    </div>
+                </div>
+
+                <div class="property-group">
+                    <h3>Physical Properties</h3>
+                    <div class="info-grid">
+                        <div class="info-item">
+                            <div class="info-label">Melting Point</div>
+                            <div class="info-value">1768.25°C</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Boiling Point</div>
+                            <div class="info-value">3824.85°C</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">State at 20°C</div>
+                            <div class="info-value">Solid</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="property-group">
+                    <h3>Real World Uses</h3>
+                    <div class="uses-list">
+                        <div class="use-item">
+                            <strong>Jewelry & Automotive:</strong> Platinum is used extensively for jewellery. Its main use, however, is in catalytic converters for cars, trucks and buses. This accounts for about 50% of demand each year. Platinum is very effective at converting emissions from the vehicle's engine into less harmful waste products.
+                        </div>
+                        <div class="use-item">
+                            <strong>Industrial Catalyst:</strong> Platinum is used in the chemicals industry as a catalyst for the production of nitric acid, silicone and benzene. It is also used as a catalyst to improve the efficiency of fuel cells.
+                        </div>
+                    </div>
+                </div>
+
+                <hr class="section-divider">
+                
+                <div class="property-group">
+                    <h3>Interesting Facts</h3>
+                    <div class="facts-list">
+                        <div class="fact-item">1. Platinum is a dense, malleable, and ductile metal with a silvery-white color.</div>
+                        <div class="fact-item">2. Platinum is 30 times rarer than gold.</div>
+                        <div class="fact-item">3. Platinum is 60 times rarer than silver.</div>
+                        <div class="fact-item">4. The word "platinum" comes from the Spanish term "platina," which means "little silver."</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">References & Links</h2>
+                <div class="links-list">
+                    <div class="link-item">
+                        <span class="link-label">Atomic Number & General Info:</span>
+                        <a href="https://www.britannica.com/science/platinum" target="_blank">Britannica - Platinum</a>
+                    </div>
+                    <div class="link-item">
+                        <span class="link-label">Atomic Mass & Symbol:</span>
+                        <a href="https://pubchem.ncbi.nlm.nih.gov/element/Platinum" target="_blank">PubChem - Platinum Element</a>
+                    </div>
+                    <div class="link-item">
+                        <span class="link-label">Group & Period Info:</span>
+                        <a href="https://www.webelements.com/" target="_blank">WebElements</a>
+                    </div>
+                    <div class="link-item">
+                        <span class="link-label">Valence Electrons:</span>
+                        <a href="https://massinitiative.org/what-is-the-valence-electrons-for-platinum/" target="_blank">Mass Initiative - Platinum Valence</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Atomic Structure</h2>
+                <div class="image-placeholder">
+                    <img src="https://i.postimg.cc/SR6MW0J1/symbol-and-electron-diagram-for-platinum-2-GTT3-D7.jpg" alt="" />
+                </div>
+                <div class="explanation">
+                    <p>Platinum atoms have 78 protons and 78 electrons. The electrons move around the nucleus in different energy levels called shells. Platinum has 6 electron shells with electrons arranged as: 2, 8, 18, 32, 17, 1. The nucleus contains 78 protons (positive) and 117 neutrons (neutral), while the 78 electrons (negative) orbit around it.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function startPresentation() {
+            document.getElementById('intro-screen').style.display = 'none';
+            document.getElementById('main-content').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
